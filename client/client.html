@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Gladiator Tournament</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+  <script type="text/babel">
+    const parseJSON = (xhr, content) => {
+      if(xhr.response && xhr.getResponseHeader('Content-Type') === 'application/json'){
+        const obj = JSON.parse(xhr.response);
+
+        content.innerHTML += `<p>Message: ${obj.message}</p>`;
+
+        console.dir(obj);
+
+        const gladArray = Object.values(obj.gladiators);
+
+        content.innerHTML += '<ol id="gladiatorList"></ol>';
+        const gladList = document.querySelector('#gladiatorList');
+        for (let i = 0; i < gladArray.length; i++) {
+          const glad = obj.gladiators[i];
+          gladList.innerHTML += `<li>Name: ${glad.name}   Health: ${glad.health}    Damage: ${glad.damage}    Luck: ${glad.luck}</li>`;
+        }
+
+        document.querySelector("#gladButton").disabled = true;
+
+        const hostButton = document.querySelector("#hostTournament");
+        const host = (e) => hostTournament(e, content, obj.gladiators);
+        hostButton.addEventListener('click', host);
+      }
+    };
+
+    const handleResponses = (xhr) => {
+      const content = document.querySelector('#content');
+
+      switch(xhr.status){
+        case 200:
+          content.innerHTML = '<b>Success</b>';
+          break;
+        case 201:
+          content.innerHTML = '<b>Created</b>';
+          break;
+        case 204:
+          content.innerHTML = '<b>Updated</b>';
+          break;
+        case 400:
+          content.innerHTML = '<b>Bad request</b>';
+          break;
+        case 404:
+          content.innerHTML = '<b>Resource Not Found</b>';
+          break;
+        default:
+          content.innerHTML = '<b>Error code not implemented by client</b>';
+          break;
+      }
+
+      parseJSON(xhr, content);
+    };
+
+    const sendPost = (e, nameForm) => {
+    };
+
+    const requestGladiators = (e, userForm) => {
+      const gladAction = gladiatorForm.getAttribute('action');
+      const gladMethod = gladiatorForm.getAttribute('method');
+
+      const xhr = new XMLHttpRequest();
+      xhr.open(gladMethod, gladAction);
+
+      xhr.setRequestHeader('Accept', 'application/json');
+      
+      xhr.onload = () => handleResponses(xhr);
+
+      xhr.send();
+
+      e.preventDefault();
+      return false;
+    }
+
+    const duel = (gladiator1, gladiator2) => {
+      let glad1 = gladiator1;
+      let glad2 = gladiator2;
+
+      while(glad1.health > 0 && glad2.health > 0){
+        glad2.health = glad2.health - glad1.damage;
+        console.dir(`${glad1.name} strikes ${glad2.name}`);
+
+        if(glad2.health > 0){
+          glad1.health = glad1.health - glad2.damage;
+          console.dir(`${glad2.name} strikes ${glad1.name}`);
+        }
+      }
+
+      if(glad1.health > 0){
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+
+    const hostTournament = (e, content, gladiators) =>{
+      console.dir("Hosting tournament:");
+
+      let gladArray = Object.values(gladiators);
+
+      while(gladArray.length > 1){
+        let duels = gladArray.length/2;
+        console.dir(`New round: ${duels} duels`);
+        for (let i = 0; i < duels; i++) {
+          const winner = duel(gladArray[i], gladArray[i+1]);
+          gladArray.splice(i + winner, 1);
+          console.dir(`Winner ${gladArray[i].name}`);
+          gladArray[i].health = 10;
+        }
+      }
+
+      content.innerHTML = `<h2>Winner!</h2>`;
+      content.innerHTML += `<h2>Name: ${gladArray[0].name}   Health: ${gladArray[0].health}    Damage: ${gladArray[0].damage}    Luck: ${gladArray[0].luck}</h2>`;
+      const hostButton = document.querySelector("#hostTournament");
+      hostButton.disabled = true;
+
+      return false;
+    }
+
+    const init = () => {
+      const gladiatorForm = document.querySelector('#gladiatorForm');
+      const getGladiators = (e) => requestGladiators(e, gladiatorForm);
+      gladiatorForm.addEventListener('submit', getGladiators);
+    };
+
+    window.onload = init;
+
+  </script>
+</head>
+<body>
+  <section id="top">
+    <h3>Let the games begin!</h3>
+    <form id="gladiatorForm" action="/getGladiators" method="get">
+      <input id="gladButton" type="submit" value="Get Gladiators"/>
+    </form>
+    <button id="hostTournament">Host Tournament</button>
+  </section>
+  <section id="content">
+  </section>
+  </section>
+</body>
+</html>

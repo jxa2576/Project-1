@@ -1,0 +1,26 @@
+{
+  "name": "project-1",
+  "version": "1.0.0",
+  "description": "Project 1",
+  "main": "./src/server.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "pretest": "eslint ./src --fix",
+    "test": "echo \"Tests Complete\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jxa2576/Project-1.git"
+  },
+  "author": "Jeb Atkinson",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/jxa2576/Project-1/issues"
+  },
+  "homepage": "https://github.com/jxa2576/Project-1#readme",
+  "devDependencies": {
+    "eslint": "^7.10.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-plugin-import": "^2.22.0"
+  }
+}
