@@ -34,6 +34,8 @@ const handleGet = (request, response, parsedUrl) => {
     htmlHandler.getCSS(request, response);
   } else if (parsedUrl.pathname === '/getGladiators') {
     jsonHandler.getGladiators(request, response);
+  } else if (parsedUrl.pathname === '/hostTournament') {
+    jsonHandler.hostTournament(request, response);
   } else if (parsedUrl.pathname === '/notReal') {
     jsonHandler.notFound(request, response, request.method);
   } else {

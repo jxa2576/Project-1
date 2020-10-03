@@ -15,8 +15,19 @@ const getGladiators = (request, response) => {
   const gladiators = gladiator.generateTournament();
 
   const responseJSON = {
-    message: 'Fetched Gladiators',
+    message: 'Fetch Gladiators',
     gladiators,
+  };
+
+  return respondJSON(request, response, 200, responseJSON);
+};
+
+const hostTournament = (request, response) => {
+  const winner = gladiator.gladiatorTournament();
+
+  const responseJSON = {
+    message: 'Host Tournament',
+    winner
   };
 
   return respondJSON(request, response, 200, responseJSON);
@@ -37,5 +48,6 @@ const notFound = (request, response, method) => {
 
 module.exports = {
   getGladiators,
+  hostTournament,
   notFound,
 };
