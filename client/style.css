@@ -50,6 +50,7 @@ html, body {
   font-size: 18px;
 }
 
+/* https://stackoverflow.com/questions/14950238/can-you-style-html-form-buttons-with-css */
 input[type="submit"]{
   background-color: #191716;
   color: #F0F2A6;
