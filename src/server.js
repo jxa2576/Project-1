@@ -4,6 +4,8 @@ const query = require('querystring');
 const htmlHandler = require('./htmlResponses.js');
 const jsonHandler = require('./jsonResponses.js');
 
+// Server base, pulled from API Assignment II
+
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const handlePost = (request, response, parsedUrl) => {
@@ -29,7 +31,8 @@ const handlePost = (request, response, parsedUrl) => {
   }
 };
 
-const handleGet = (request, response, parsedUrl) => {
+// HANDLE PARAMS FOR SEARCH IN HALL OF FAME?????
+const handleGet = (request, response, parsedUrl, params) => {
   if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getCSS(request, response);
   } else if (parsedUrl.pathname === '/generateGladiators') {
@@ -38,6 +41,8 @@ const handleGet = (request, response, parsedUrl) => {
     jsonHandler.getGladiators(request, response);
   } else if (parsedUrl.pathname === '/hostTournament') {
     jsonHandler.hostTournament(request, response);
+  } else if (parsedUrl.pathname === '/hallOfFame') {
+    jsonHandler.hallOfFame(request, response, params);
   } else {
     htmlHandler.getIndex(request, response);
   }
@@ -45,11 +50,12 @@ const handleGet = (request, response, parsedUrl) => {
 
 const onRequest = (request, response) => {
   const parsedUrl = url.parse(request.url);
+  const params = query.parse(parsedUrl.query);
 
   if (request.method === 'POST') {
     handlePost(request, response, parsedUrl);
   } else {
-    handleGet(request, response, parsedUrl);
+    handleGet(request, response, parsedUrl, params);
   }
 };
 

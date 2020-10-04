@@ -7,15 +7,14 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
+  //Using API Assignment II as a base
     const parseJSON = (xhr, content) => {
       if(xhr.response && xhr.getResponseHeader('Content-Type') === 'application/json'){
         const obj = JSON.parse(xhr.response);
 
         content.innerHTML += `<p>Message: ${obj.message}</p>`;
 
-        console.dir(obj);
-
-        //Shows gladiators when they are generated CHANGE THIS?
+        //Pulls up the the gladitor data, needs to be generated first
         if(obj.gladiators){
           const gladArray = Object.values(obj.gladiators);
 
@@ -27,12 +26,28 @@
           }
         }
 
+        //Shows the winner of the tournament
         if(obj.winner){
-          console.dir('Winner: ' + obj.winner);
           content.innerHTML += '<ol id="gladiatorList"></ol>';
           const gladList = document.querySelector('#gladiatorList');
           const glad = obj.winner;
           gladList.innerHTML += `<li>Name: ${glad.name}   Health: ${glad.health}    Damage: ${glad.damage}    Defense: ${glad.defense}    Luck: ${glad.luck}</li>`;
+        }
+
+        //Pulls up the hall of fame, the winners of each tournament
+        if(obj.winners){
+          //If a search has been specified, will looking for gladiator with matching name
+          if(obj.searchResult){
+            const glad = obj.searchResult;
+            content.innerHTML += `<h2>Name: ${glad.name}   Health: ${glad.health}    Damage: ${glad.damage}    Defense: ${glad.defense}    Luck: ${glad.luck}</h2>`;
+          }
+          const winArray = Object.values(obj.winners);
+          content.innerHTML += '<ol id="gladiatorList"></ol>';
+          const gladList = document.querySelector('#gladiatorList');
+          for (const key in obj.winners) {
+            const glad = obj.winners[key];
+            gladList.innerHTML += `<li>Name: ${glad.name}   Health: ${glad.health}    Damage: ${glad.damage}    Defense: ${glad.defense}    Luck: ${glad.luck}</li>`;
+          }
         }
       }
     };
@@ -67,6 +82,7 @@
       parseJSON(xhr, content);
     };
 
+    //Edit parameters pertaining to the gladiators/tournament
     const sendPost = (e, userForm) => {
       e.preventDefault();
 
@@ -93,8 +109,22 @@
       const userAction = userForm.getAttribute('action');
       const userMethod = userForm.getAttribute('method');
 
+      //Check field for search parameter
+      let newUrl = 0;
+      if(userForm.id === 'fameForm'){
+        const nameField = userForm.querySelector('#nameField');
+        console.dir(nameField.value);
+        console.dir(userAction);
+        newUrl = `${userAction}?name=${nameField.value}`;
+        console.dir(newUrl);
+      }
       const xhr = new XMLHttpRequest();
-      xhr.open(userMethod, userAction);
+
+      if(newUrl === 0){
+        xhr.open(userMethod, userAction);
+      } else {
+        xhr.open(userMethod, newUrl);
+      }
 
       xhr.setRequestHeader('Accept', 'application/json');
       
@@ -122,6 +152,10 @@
       const tournamentForm = document.querySelector('#tournamentForm');
       const hostTournament = (e) => userRequest(e, tournamentForm);
       tournamentForm.addEventListener('submit', hostTournament);
+
+      const fameForm = document.querySelector('#fameForm');
+      const hallOfFame = (e) => userRequest(e, fameForm);
+      fameForm.addEventListener('submit', hallOfFame);
     };
 
     window.onload = init;
@@ -134,7 +168,7 @@
     <form id="parametersForm" action="/editParameters" method="post">
       <label for="rounds">Rounds</label>
       <input id="roundsField" type="number" name="rounds" min="1" max="10" step="1"/>
-      <input type="submit" value="Change Parameters"/>
+      <input type="submit" value="Set Parameters"/>
     </form>
     <form id="generateForm" action="/generateGladiators" method="get">
       <input id="generateButton" type="submit" value="Generate Gladiators"/>
@@ -144,6 +178,11 @@
     </form>
     <form id="tournamentForm" action="/hostTournament" method="get">
       <input id="hostButton" type="submit" value="Host Tournament"/>
+    </form>
+    <form id="fameForm" action="/hallOfFame" method="get">
+      <label for="name">Search: </label>
+      <input id="nameField" type="text" name="name"/>
+      <input id="fameButton" type="submit" value="Hall of Fame"/>
     </form>
   </section>
   <section id="content">

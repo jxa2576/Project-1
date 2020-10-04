@@ -2,9 +2,14 @@ const gladiators = {};
 const parameters = {
   rounds: 4,
 };
+/* const state = {
+  currentState: 0,
+  states: ['generate', 'get', 'host', 'winner'],
+}; */
+const winners = {};
 
+// Edit above parameter object. Potential to add more, to increase user control
 const editParameter = (parameter, value) => {
-  console.dir(parameter);
   if (parameters[parameter]) {
     parameters[parameter] = value;
     return 1;
@@ -19,6 +24,7 @@ const getRandomInt = (mn, mx) => {
   return Math.floor(Math.random() * (max - min) + min);
 };
 
+// Randomly generates a Gladiator
 const generateGladiator = () => {
   const gladiator = {
     name: getRandomInt(500, 1000),
@@ -31,14 +37,17 @@ const generateGladiator = () => {
   return gladiator;
 };
 
+// Based on the amount of rounds, 2-10, generates the tournament array
 const generateGladiators = () => {
   for (let i = 0; i < (2 ** parameters.rounds); i++) {
     gladiators[i] = generateGladiator();
   }
 };
 
+// Grabs the object holding the gladiators
 const getGladiators = () => gladiators;
 
+// The first gladiator attempts to hit the second gladiator
 const attack = (g1, g2) => {
   const luck = getRandomInt(0, 10);
   if (g1.luck >= luck) {
@@ -48,6 +57,7 @@ const attack = (g1, g2) => {
   return g2.health;
 };
 
+// Intiates a fight between two gladiators
 const duel = (gladiator1, gladiator2) => {
   const glad1 = gladiator1;
   const glad2 = gladiator2;
@@ -61,35 +71,37 @@ const duel = (gladiator1, gladiator2) => {
   }
 
   if (glad1.health > 0) {
-    console.dir(`${glad1.name} beats ${glad2.name}`);
     return 1;
   }
-  console.dir(`${glad2.name} beats ${glad1.name}`);
   return 0;
 };
 
+// Conducts the gladiator tournament passing the winner on
 const gladiatorTournament = () => {
-  console.dir('Hosting tournament:');
-
   const gladArray = Object.values(gladiators);
 
+  // Conducts the fights, kicking the loser out of the array
   while (gladArray.length > 1) {
     const duels = gladArray.length / 2;
-    console.dir(`New round: ${duels} duels`);
     for (let i = 0; i < duels; i++) {
       const winner = duel(gladArray[i], gladArray[i + 1]);
       gladArray.splice(i + winner, 1);
-      console.dir(`Winner ${gladArray[i].name}`);
       gladArray[i].health = 20;
     }
   }
-  console.dir('Tournament Over');
+  const tournamentWinner = gladArray[0];
+  winners[Date.now()] = tournamentWinner;
+
   return gladArray[0];
 };
+
+// Get the winner object
+const getWinners = () => winners;
 
 module.exports = {
   editParameter,
   generateGladiators,
   getGladiators,
   gladiatorTournament,
+  getWinners,
 };

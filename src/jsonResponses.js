@@ -1,5 +1,7 @@
 const gladiator = require('./gladiator.js');
 
+// Pulled from API Assignment II
+
 const respondJSON = (request, response, status, object) => {
   response.writeHead(status, { 'Content-Type': 'application/json' });
   response.write(JSON.stringify(object));
@@ -11,6 +13,7 @@ const respondJSONMeta = (request, response, status) => {
   response.end();
 };
 
+// Calls editParameter in Gladiator.js
 const editParameters = (request, response, body) => {
   const responseJSON = {
     message: 'Rounds Required',
@@ -18,7 +21,6 @@ const editParameters = (request, response, body) => {
 
   const responseCode = 204;
 
-  console.dir(body);
   if (gladiator.editParameter('rounds', body.rounds) === 0) {
     responseJSON.id = 'missingParams';
     return respondJSON(request, response, 400, responseJSON);
@@ -27,6 +29,7 @@ const editParameters = (request, response, body) => {
   return respondJSONMeta(request, response, responseCode);
 };
 
+// Calls generateGladiators in Gladiator.js
 const generateGladiators = (request, response) => {
   gladiator.generateGladiators();
 
@@ -37,6 +40,7 @@ const generateGladiators = (request, response) => {
   return respondJSONMeta(request, response, 201);
 };
 
+// Calls getGladiators in Gladiator.js
 const getGladiators = (request, response) => {
   const gladiators = gladiator.getGladiators();
 
@@ -48,12 +52,34 @@ const getGladiators = (request, response) => {
   return respondJSON(request, response, 200, responseJSON);
 };
 
+// Calls gladiatorTournament in Gladiator.js
 const hostTournament = (request, response) => {
   const winner = gladiator.gladiatorTournament();
 
   const responseJSON = {
-    message: 'Host Tournament',
+    message: 'Hosted Tournament',
     winner,
+  };
+
+  return respondJSON(request, response, 200, responseJSON);
+};
+
+// Calls getWinners in Gladiator.js and checks for User Search of the history of winners
+const hallOfFame = (request, response, params) => {
+  const winners = gladiator.getWinners();
+  let searchResult = 0;
+
+  // Check data based on params - Name for now
+  Object.values(winners).forEach((winner) => {
+    if (winner.name.toString() === params.name) {
+      searchResult = winner;
+    }
+  });
+
+  const responseJSON = {
+    message: 'Hall of Fame',
+    winners,
+    searchResult,
   };
 
   return respondJSON(request, response, 200, responseJSON);
@@ -64,4 +90,5 @@ module.exports = {
   generateGladiators,
   getGladiators,
   hostTournament,
+  hallOfFame,
 };
