@@ -39,6 +39,9 @@ const generateGladiator = () => {
 
 // Based on the amount of rounds, 2-10, generates the tournament array
 const generateGladiators = () => {
+  Object.keys(gladiators).forEach((gladiator) => {
+    delete gladiators[gladiator];
+  });
   for (let i = 0; i < (2 ** parameters.rounds); i++) {
     gladiators[i] = generateGladiator();
   }

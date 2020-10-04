@@ -113,10 +113,7 @@
       let newUrl = 0;
       if(userForm.id === 'fameForm'){
         const nameField = userForm.querySelector('#nameField');
-        console.dir(nameField.value);
-        console.dir(userAction);
         newUrl = `${userAction}?name=${nameField.value}`;
-        console.dir(newUrl);
       }
       const xhr = new XMLHttpRequest();
 
