@@ -18,13 +18,13 @@ const generateGladiator = () => {
   return gladiator;
 };
 
-const generateTournament = () => {
-  for (let i = 0; i < 16; i++) {
+const generateGladiators = () => {
+  for (let i = 0; i < 32; i++) {
     gladiators[i] = generateGladiator();
   }
-
-  return gladiators;
 };
+
+const getGladiators = () => gladiators;
 
 const attack = (g1, g2) => {
   const luck = getRandomInt(0, 10);
@@ -41,17 +41,17 @@ const duel = (gladiator1, gladiator2) => {
 
   while (glad1.health > 0 && glad2.health > 0) {
     glad2.health = attack(glad1, glad2);
-    console.dir(`${glad1.name} strikes ${glad2.name}`);
 
     if (glad2.health > 0) {
       glad1.health = attack(glad2, glad1);
-      console.dir(`${glad2.name} strikes ${glad1.name}`);
     }
   }
 
   if (glad1.health > 0) {
+    console.dir(`${glad1.name} beats ${glad2.name}`);
     return 1;
   }
+  console.dir(`${glad2.name} beats ${glad1.name}`);
   return 0;
 };
 
@@ -75,6 +75,7 @@ const gladiatorTournament = () => {
 };
 
 module.exports = {
-  generateTournament,
+  generateGladiators,
+  getGladiators,
   gladiatorTournament,
 };

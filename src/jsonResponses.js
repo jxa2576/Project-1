@@ -11,8 +11,18 @@ const respondJSONMeta = (request, response, status) => {
   response.end();
 };
 
+const generateGladiators = (request, response) => {
+  gladiator.generateGladiators();
+
+  const responseJSON = {
+    message: 'Generated Gladiators',
+  }
+
+  return respondJSON(request, response, 201, responseJSON);
+};
+
 const getGladiators = (request, response) => {
-  const gladiators = gladiator.generateTournament();
+  const gladiators = gladiator.getGladiators();
 
   const responseJSON = {
     message: 'Fetch Gladiators',
@@ -27,27 +37,14 @@ const hostTournament = (request, response) => {
 
   const responseJSON = {
     message: 'Host Tournament',
-    winner
+    winner,
   };
 
   return respondJSON(request, response, 200, responseJSON);
 };
 
-const notFound = (request, response, method) => {
-  const responseJSON = {
-    message: 'The page you are looking for was not found.',
-    id: 'notFound',
-  };
-  const responseCode = 404;
-
-  if (method === 'GET') {
-    return respondJSON(request, response, responseCode, responseJSON);
-  }
-  return respondJSONMeta(request, response, responseCode);
-};
-
 module.exports = {
+  generateGladiators,
   getGladiators,
   hostTournament,
-  notFound,
 };

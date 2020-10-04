@@ -32,12 +32,12 @@ const handlePost = (request, response, parsedUrl) => {
 const handleGet = (request, response, parsedUrl) => {
   if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getCSS(request, response);
+  } else if (parsedUrl.pathname === '/generateGladiators') {
+    jsonHandler.generateGladiators(request, response);
   } else if (parsedUrl.pathname === '/getGladiators') {
     jsonHandler.getGladiators(request, response);
   } else if (parsedUrl.pathname === '/hostTournament') {
     jsonHandler.hostTournament(request, response);
-  } else if (parsedUrl.pathname === '/notReal') {
-    jsonHandler.notFound(request, response, request.method);
   } else {
     htmlHandler.getIndex(request, response);
   }

@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
   <title>Gladiator Tournament</title>
+  <link rel ="stylesheet" href="https://fonts.googleapis.com/css?family=Piazzolla">
   <link rel="stylesheet" type="text/css" href="/style.css">
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
     const parseJSON = (xhr, content) => {
       if(xhr.response && xhr.getResponseHeader('Content-Type') === 'application/json'){
-        console.dir(xhr);
-
         const obj = JSON.parse(xhr.response);
 
         content.innerHTML += `<p>Message: ${obj.message}</p>`;
@@ -29,6 +28,7 @@
         }
 
         if(obj.winner){
+          console.dir('Winner: ' + obj.winner);
           content.innerHTML += '<ol id="gladiatorList"></ol>';
           const gladList = document.querySelector('#gladiatorList');
           const glad = obj.winner;
@@ -48,13 +48,16 @@
           content.innerHTML = '<b>Created</b>';
           break;
         case 204:
-          content.innerHTML = '<b>Updated</b>';
+          content.innerHTML = '<b>No content, check header</b>';
           break;
         case 400:
           content.innerHTML = '<b>Bad request</b>';
           break;
         case 404:
-          content.innerHTML = '<b>Resource Not Found</b>';
+          content.innerHTML = '<b>Not Found</b>';
+          break;
+        case 500:
+          content.innerHTML = '<b>Internal Server Error</b>';
           break;
         default:
           content.innerHTML = '<b>Error code not implemented by client</b>';
@@ -85,6 +88,10 @@
     }
 
     const init = () => {
+      const generateForm = document.querySelector('#generateForm');
+      const generateGladiators = (e) => userRequest(e, generateForm);
+      generateForm.addEventListener('submit', generateGladiators);
+
       const gladiatorForm = document.querySelector('#gladiatorForm');
       const getGladiators = (e) => userRequest(e, gladiatorForm);
       gladiatorForm.addEventListener('submit', getGladiators);
@@ -101,6 +108,9 @@
 <body>
   <section id="top">
     <h3>Let the games begin!</h3>
+    <form id="generateForm" action="/generateGladiators" method="get">
+      <input id="generateButton" type="submit" value="Generate Gladiators"/>
+    </form>
     <form id="gladiatorForm" action="/getGladiators" method="get">
       <input id="gladButton" type="submit" value="Get Gladiators"/>
     </form>
