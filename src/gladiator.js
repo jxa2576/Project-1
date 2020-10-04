@@ -1,3 +1,6 @@
+// random-animal-name: https://www.npmjs.com/package/random-animal-name
+const randomAnimalName = require('random-animal-name');
+
 const gladiators = {};
 const parameters = {
   rounds: 4,
@@ -27,7 +30,7 @@ const getRandomInt = (mn, mx) => {
 // Randomly generates a Gladiator
 const generateGladiator = () => {
   const gladiator = {
-    name: getRandomInt(500, 1000),
+    name: randomAnimalName(),
     health: 20,
     damage: getRandomInt(4, 6),
     defense: getRandomInt(0, 3),
