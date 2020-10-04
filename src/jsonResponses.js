@@ -11,14 +11,30 @@ const respondJSONMeta = (request, response, status) => {
   response.end();
 };
 
+const editParameters = (request, response, body) => {
+  const responseJSON = {
+    message: 'Rounds Required',
+  };
+
+  const responseCode = 204;
+
+  console.dir(body);
+  if (gladiator.editParameter('rounds', body.rounds) === 0) {
+    responseJSON.id = 'missingParams';
+    return respondJSON(request, response, 400, responseJSON);
+  }
+
+  return respondJSONMeta(request, response, responseCode);
+};
+
 const generateGladiators = (request, response) => {
   gladiator.generateGladiators();
 
-  const responseJSON = {
+  /* const responseJSON = {
     message: 'Generated Gladiators',
-  }
+  }; */
 
-  return respondJSON(request, response, 201, responseJSON);
+  return respondJSONMeta(request, response, 201);
 };
 
 const getGladiators = (request, response) => {
@@ -44,6 +60,7 @@ const hostTournament = (request, response) => {
 };
 
 module.exports = {
+  editParameters,
   generateGladiators,
   getGladiators,
   hostTournament,

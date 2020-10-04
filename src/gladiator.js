@@ -1,5 +1,18 @@
 const gladiators = {};
+const parameters = {
+  rounds: 4,
+};
 
+const editParameter = (parameter, value) => {
+  console.dir(parameter);
+  if (parameters[parameter]) {
+    parameters[parameter] = value;
+    return 1;
+  }
+  return 0;
+};
+
+// Random int from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
 const getRandomInt = (mn, mx) => {
   const min = Math.ceil(mn);
   const max = Math.floor(mx + 1);
@@ -19,7 +32,7 @@ const generateGladiator = () => {
 };
 
 const generateGladiators = () => {
-  for (let i = 0; i < 32; i++) {
+  for (let i = 0; i < (2 ** parameters.rounds); i++) {
     gladiators[i] = generateGladiator();
   }
 };
@@ -75,6 +88,7 @@ const gladiatorTournament = () => {
 };
 
 module.exports = {
+  editParameter,
   generateGladiators,
   getGladiators,
   gladiatorTournament,

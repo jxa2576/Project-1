@@ -48,7 +48,7 @@
           content.innerHTML = '<b>Created</b>';
           break;
         case 204:
-          content.innerHTML = '<b>No content, check header</b>';
+          content.innerHTML = '<b>Updated</b>';
           break;
         case 400:
           content.innerHTML = '<b>Bad request</b>';
@@ -67,7 +67,26 @@
       parseJSON(xhr, content);
     };
 
-    const sendPost = (e, nameForm) => {
+    const sendPost = (e, userForm) => {
+      e.preventDefault();
+
+      const userAction = userForm.getAttribute('action');
+      const userMethod = userForm.getAttribute('method');
+
+      const roundsField = userForm.querySelector('#roundsField');
+
+      const xhr = new XMLHttpRequest();
+      xhr.open(userMethod, userAction);
+
+      xhr.setRequestHeader('Accept', 'application/json');
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+      xhr.onload = () => handleResponses(xhr);
+
+      const formData = `rounds=${roundsField.value}`;
+      xhr.send(formData);
+
+      return false;      
     };
 
     const userRequest = (e, userForm) => {
@@ -88,6 +107,10 @@
     }
 
     const init = () => {
+      const parametersForm = document.querySelector('#parametersForm');
+      const editParameters = (e) => sendPost(e, parametersForm);
+      parametersForm.addEventListener('submit', editParameters);
+
       const generateForm = document.querySelector('#generateForm');
       const generateGladiators = (e) => userRequest(e, generateForm);
       generateForm.addEventListener('submit', generateGladiators);
@@ -108,6 +131,11 @@
 <body>
   <section id="top">
     <h3>Let the games begin!</h3>
+    <form id="parametersForm" action="/editParameters" method="post">
+      <label for="rounds">Rounds</label>
+      <input id="roundsField" type="number" name="rounds" min="1" max="10" step="1"/>
+      <input type="submit" value="Change Parameters"/>
+    </form>
     <form id="generateForm" action="/generateGladiators" method="get">
       <input id="generateButton" type="submit" value="Generate Gladiators"/>
     </form>
