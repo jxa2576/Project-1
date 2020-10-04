@@ -33,11 +33,12 @@ const editParameters = (request, response, body) => {
 const generateGladiators = (request, response) => {
   gladiator.generateGladiators();
 
-  /* const responseJSON = {
+  const responseJSON = {
     message: 'Generated Gladiators',
-  }; */
+    state: 1,
+  };
 
-  return respondJSONMeta(request, response, 201);
+  return respondJSON(request, response, 201, responseJSON);
 };
 
 // Calls getGladiators in Gladiator.js
@@ -47,6 +48,7 @@ const getGladiators = (request, response) => {
   const responseJSON = {
     message: 'Fetch Gladiators',
     gladiators,
+    state: 2,
   };
 
   return respondJSON(request, response, 200, responseJSON);
@@ -59,6 +61,7 @@ const hostTournament = (request, response) => {
   const responseJSON = {
     message: 'Hosted Tournament',
     winner,
+    state: 3,
   };
 
   return respondJSON(request, response, 200, responseJSON);

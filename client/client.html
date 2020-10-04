@@ -7,10 +7,38 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
+    //User Input
+    const parametersForm = document.querySelector('#parametersForm');
+    const generateForm = document.querySelector('#generateForm');
+    const gladiatorForm = document.querySelector('#gladiatorForm');
+    const tournamentForm = document.querySelector('#tournamentForm');
+    const fameForm = document.querySelector('#fameForm');
+
   //Using API Assignment II as a base
     const parseJSON = (xhr, content) => {
       if(xhr.response && xhr.getResponseHeader('Content-Type') === 'application/json'){
         const obj = JSON.parse(xhr.response);
+
+        //State property helps keep track what step of the process the server is on
+        if(obj.state){
+          console.dir(obj.state)
+          switch(obj.state){
+            case 1:
+              gladiatorForm.style.display = "inline";
+              generateForm.style.display = "none";
+              break;
+            case 2:
+              tournamentForm.style.display = "inline";
+              gladiatorForm.style.display = "none";
+              break;
+            case 3:
+              generateForm.style.display = "inline";
+              tournamentForm.style.display = "none";
+              break;
+            default:
+              break;
+          }
+        }
 
         content.innerHTML += `<p>Message: ${obj.message}</p>`;
 
@@ -134,23 +162,23 @@
     }
 
     const init = () => {
-      const parametersForm = document.querySelector('#parametersForm');
+      //const parametersForm = document.querySelector('#parametersForm');
       const editParameters = (e) => sendPost(e, parametersForm);
       parametersForm.addEventListener('submit', editParameters);
 
-      const generateForm = document.querySelector('#generateForm');
+      //const generateForm = document.querySelector('#generateForm');
       const generateGladiators = (e) => userRequest(e, generateForm);
       generateForm.addEventListener('submit', generateGladiators);
 
-      const gladiatorForm = document.querySelector('#gladiatorForm');
+      //const gladiatorForm = document.querySelector('#gladiatorForm');
       const getGladiators = (e) => userRequest(e, gladiatorForm);
       gladiatorForm.addEventListener('submit', getGladiators);
 
-      const tournamentForm = document.querySelector('#tournamentForm');
+      //const tournamentForm = document.querySelector('#tournamentForm');
       const hostTournament = (e) => userRequest(e, tournamentForm);
       tournamentForm.addEventListener('submit', hostTournament);
 
-      const fameForm = document.querySelector('#fameForm');
+      //const fameForm = document.querySelector('#fameForm');
       const hallOfFame = (e) => userRequest(e, fameForm);
       fameForm.addEventListener('submit', hallOfFame);
     };

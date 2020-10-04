@@ -37,3 +37,11 @@ html, body {
   list-style-type: upper-roman;
   list-style-position: inside;
 }
+
+#gladiatorForm{
+  display: none;
+}
+
+#tournamentForm{
+  display: none;
+}
