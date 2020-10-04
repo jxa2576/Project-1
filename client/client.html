@@ -40,7 +40,7 @@
           }
         }
 
-        content.innerHTML += `<p>Message: ${obj.message}</p>`;
+        content.innerHTML += `<p>${obj.message}</p>`;
 
         //Pulls up the the gladitor data, needs to be generated first
         if(obj.gladiators){
@@ -80,7 +80,8 @@
       }
     };
 
-    const handleResponses = (xhr) => {
+    //Checks the status code and moves on to parse data from response message
+    const handleResponses = (xhr, form) => {
       const content = document.querySelector('#content');
 
       switch(xhr.status){
@@ -107,6 +108,9 @@
           break;
       }
 
+      if(form){
+        parseJSON(xhr, form);
+      }
       parseJSON(xhr, content);
     };
 
@@ -125,7 +129,9 @@
       xhr.setRequestHeader('Accept', 'application/json');
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-      xhr.onload = () => handleResponses(xhr);
+      const form = document.querySelector('#form');
+
+      xhr.onload = () => handleResponses(xhr, form);
 
       const formData = `rounds=${roundsField.value}`;
       xhr.send(formData);
@@ -133,6 +139,7 @@
       return false;      
     };
 
+    //Handles requests to the server
     const userRequest = (e, userForm) => {
       const userAction = userForm.getAttribute('action');
       const userMethod = userForm.getAttribute('method');
@@ -161,24 +168,20 @@
       return false;
     }
 
+    //Assign respective functionlity to each form
     const init = () => {
-      //const parametersForm = document.querySelector('#parametersForm');
       const editParameters = (e) => sendPost(e, parametersForm);
       parametersForm.addEventListener('submit', editParameters);
 
-      //const generateForm = document.querySelector('#generateForm');
       const generateGladiators = (e) => userRequest(e, generateForm);
       generateForm.addEventListener('submit', generateGladiators);
 
-      //const gladiatorForm = document.querySelector('#gladiatorForm');
       const getGladiators = (e) => userRequest(e, gladiatorForm);
       gladiatorForm.addEventListener('submit', getGladiators);
 
-      //const tournamentForm = document.querySelector('#tournamentForm');
       const hostTournament = (e) => userRequest(e, tournamentForm);
       tournamentForm.addEventListener('submit', hostTournament);
 
-      //const fameForm = document.querySelector('#fameForm');
       const hallOfFame = (e) => userRequest(e, fameForm);
       fameForm.addEventListener('submit', hallOfFame);
     };
@@ -190,9 +193,11 @@
 <body>
   <section id="top">
     <h3>Let the games begin!</h3>
+  </section>
+  <section id="form">
     <form id="parametersForm" action="/editParameters" method="post">
-      <label for="rounds">Rounds</label>
-      <input id="roundsField" type="number" name="rounds" min="1" max="10" step="1"/>
+      <label for="rounds">Rounds:</label>
+      <input id="roundsField" type="number" name="rounds" min="1" max="8" step="1" value="4"/>
       <input type="submit" value="Set Parameters"/>
     </form>
     <form id="generateForm" action="/generateGladiators" method="get">

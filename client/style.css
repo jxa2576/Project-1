@@ -12,11 +12,13 @@ html, body {
   width: 100%;
   margin: 0;
   padding: 0;
+  background-color: #822E81;
 }
 
 #top {
   text-align: center;
   margin: 0 auto;
+  color: #F0F2A6;
 }
 
 #top h1 {
@@ -31,11 +33,35 @@ html, body {
   margin-top: 100px;
   font-size: 2em;
   text-align: center;
+  color: #F0F2A6;
 }
 
 #gladiatorList {
   list-style-type: upper-roman;
   list-style-position: inside;
+}
+
+#form{
+  text-align: center;
+  margin: 0 auto;
+  background-color: #DBB3B1;
+  color: #191716;
+  padding: 1em;
+  font-size: 18px;
+}
+
+input[type="submit"]{
+  background-color: #191716;
+  color: #F0F2A6;
+  font-size: 24px;
+}
+
+#parametersForm{
+  text-align: left;
+}
+
+#generateForm{
+  display: inline;
 }
 
 #gladiatorForm{
@@ -44,4 +70,8 @@ html, body {
 
 #tournamentForm{
   display: none;
+}
+
+#fameForm{
+  text-align: right;
 }
