@@ -7,6 +7,15 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
+    const moneyText = document.querySelector('#money')
+    let money = 0;
+    let currentBet = '';
+
+    const bet = (gladName) => {
+      currentBet = gladName;
+      console.dir(currentBet);
+    }
+
     //User Input
     const parametersForm = document.querySelector('#parametersForm');
     const generateForm = document.querySelector('#generateForm');
@@ -51,6 +60,7 @@
           for (let i = 0; i < gladArray.length; i++) {
             const glad = obj.gladiators[i];
             gladList.innerHTML += `<li>Name: ${glad.name}   Health: ${glad.health}    Damage: ${glad.damage}    Defense: ${glad.defense}    Luck: ${glad.luck}</li>`;
+            //gladList.innerHTML += `<button id="${glad.name}">Bet</button>`;
           }
         }
 
@@ -184,6 +194,9 @@
 
       const hallOfFame = (e) => userRequest(e, fameForm);
       fameForm.addEventListener('submit', hallOfFame);
+
+      money = 10;
+      moneyText.innerHTML = `$ ${money}`;
     };
 
     window.onload = init;
@@ -208,6 +221,9 @@
     </form>
     <form id="tournamentForm" action="/hostTournament" method="get">
       <input id="hostButton" type="submit" value="Host Tournament"/>
+    </form>
+    <form id="moneyForm">
+      <label id="money">$</label>
     </form>
     <form id="fameForm" action="/hallOfFame" method="get">
       <label for="name">Search: </label>
